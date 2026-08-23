@@ -11,6 +11,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=${DB_INTERNAL_PORT};Database=${POSTGRES_DB};User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TrustServerCertificate=True
     ports:
       - "8080"
       - "8081"
@@ -23,11 +24,11 @@ services:
     image: postgres:13
 
     environment:
-      POSTGRES_DB: developer_evaluation
-      POSTGRES_USER: developer
-      POSTGRES_PASSWORD: ev@luAt10n
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432"
+      - "${DB_EXTERNAL_PORT}:${DB_INTERNAL_PORT:-5432}"
     restart: unless-stopped
 
   ambev.developerevaluation.nosql:
