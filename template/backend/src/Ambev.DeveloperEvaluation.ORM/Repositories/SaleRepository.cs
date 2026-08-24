@@ -37,6 +37,8 @@ public class SaleRepository(DefaultContext context) : ISaleRepository
             .Take(pageSize)
             .ToListAsync(cancellationToken);
     }
+    public Task<int> CountAsync(CancellationToken cancellationToken) =>
+        context.Sales.CountAsync(cancellationToken);
 
     public Task<int> UpdateAsync(Sale sale, CancellationToken cancellationToken)
     {
