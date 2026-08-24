@@ -103,14 +103,7 @@ public class SalesController(IMediator mediator, IMapper mapper) : BaseControlle
 
         var pagedList = new PaginatedList<GetSaleListItemResponse>(items, response.TotalCount, page, pageSize);
 
-        return base.Ok(new PaginatedResponse<GetSaleListItemResponse>
-        {
-            Data = pagedList,
-            CurrentPage = pagedList.CurrentPage,
-            TotalPages = pagedList.TotalPages,
-            TotalCount = pagedList.TotalCount,
-            Success = true
-        });
+        return OkPaginated(pagedList);
     }
 
     /// <summary>

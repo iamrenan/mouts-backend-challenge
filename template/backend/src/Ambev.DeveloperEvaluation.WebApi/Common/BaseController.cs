@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Common;
@@ -13,8 +13,16 @@ public class BaseController : ControllerBase
     protected string GetCurrentUserEmail() =>
         User.FindFirst(ClaimTypes.Email)?.Value ?? throw new NullReferenceException();
 
+    protected new IActionResult Ok() =>
+        base.Ok(new ApiResponse { Success = true });
+
+    protected IActionResult Ok(ApiResponse response) =>
+        base.Ok(response);
+
     protected IActionResult Ok<T>(T data) =>
-            base.Ok(new ApiResponseWithData<T> { Data = data, Success = true });
+        data is ApiResponse apiResponse
+            ? base.Ok(apiResponse)
+            : base.Ok(new ApiResponseWithData<T> { Data = data, Success = true });
 
     protected IActionResult Created<T>(string routeName, object routeValues, T data) =>
         base.CreatedAtRoute(routeName, routeValues, new ApiResponseWithData<T> { Data = data, Success = true });
@@ -26,12 +34,12 @@ public class BaseController : ControllerBase
         base.NotFound(new ApiResponse { Message = message, Success = false });
 
     protected IActionResult OkPaginated<T>(PaginatedList<T> pagedList) =>
-            Ok(new PaginatedResponse<T>
-            {
-                Data = pagedList,
-                CurrentPage = pagedList.CurrentPage,
-                TotalPages = pagedList.TotalPages,
-                TotalCount = pagedList.TotalCount,
-                Success = true
-            });
+        base.Ok(new PaginatedResponse<T>
+        {
+            Data = pagedList,
+            CurrentPage = pagedList.CurrentPage,
+            TotalPages = pagedList.TotalPages,
+            TotalCount = pagedList.TotalCount,
+            Success = true
+        });
 }
