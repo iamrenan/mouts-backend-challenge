@@ -11,6 +11,16 @@ public class UpdateSaleRequestValidator : AbstractValidator<UpdateSaleRequest>
         RuleFor(s => s.BranchName).MaximumLength(100);
         When(s => s.Items != null, () =>
         {
+            RuleFor(s => s.Items)
+                .Must(items => items == null || items
+                    .GroupBy(i => i.ProductId)
+                    .All(g => g.Where(i => !string.IsNullOrEmpty(i.ProductName)).Select(i => i.ProductName).Distinct(StringComparer.OrdinalIgnoreCase).Count() <= 1))
+                .WithMessage("Items with the same ProductId cannot have different ProductNames.")
+                .Must(items => items == null || items
+                    .GroupBy(i => i.ProductId)
+                    .All(g => g.Where(i => i.UnitPrice.HasValue).Select(i => i.UnitPrice!.Value).Distinct().Count() <= 1))
+                .WithMessage("Items with the same ProductId cannot have different UnitPrices.");
+
             RuleForEach(s => s.Items).ChildRules(item =>
             {
                 item.RuleFor(i => i.ProductId).NotEmpty();
