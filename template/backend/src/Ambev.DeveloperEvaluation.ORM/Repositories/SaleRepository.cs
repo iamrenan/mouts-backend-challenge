@@ -40,9 +40,10 @@ public class SaleRepository(DefaultContext context) : ISaleRepository
     public Task<int> CountAsync(CancellationToken cancellationToken) =>
         context.Sales.CountAsync(cancellationToken);
 
-    public Task<int> UpdateAsync(Sale sale, CancellationToken cancellationToken)
+    public async Task<int> UpdateAsync(Sale sale, CancellationToken cancellationToken)
     {
-        return context.SaveChangesAsync(cancellationToken);
+        context.Sales.Update(sale);
+        return await context.SaveChangesAsync(cancellationToken);
     }
 
     /// <summary>
