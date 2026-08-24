@@ -25,18 +25,18 @@ public class SaleRepository(DefaultContext context) : ISaleRepository
     /// <param name="id">The unique identifier of the sale</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale if found, null otherwise</returns>
-    public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        return await context.Sales.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
-    }
+    public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+        await context.Sales
+            .Include(s => s.Items)
+            .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
 
-    public async Task<List<Sale>> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
-    {
-        return await context.Sales
+    public async Task<List<Sale>> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken) =>
+        await context.Sales
+            .Include(s => s.Items)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
-    }
+
     public Task<int> CountAsync(CancellationToken cancellationToken) =>
         context.Sales.CountAsync(cancellationToken);
 
