@@ -1,5 +1,5 @@
+using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using AutoMapper;
 using FluentValidation;
 using MediatR;
 
@@ -8,9 +8,10 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 /// <summary>
 /// Handler for processing DeleteSaleCommand requests
 /// </summary>
-public class DeleteSaleHandler(ISaleRepository saleRepository, IMapper mapper) : IRequestHandler<DeleteSaleCommand, DeleteSaleResult>
+public class DeleteSaleHandler(
+    ISaleRepository saleRepository,
+    IMediator mediator) : IRequestHandler<DeleteSaleCommand, DeleteSaleResult>
 {
-
     /// <summary>
     /// Handles the DeleteSaleCommand request
     /// </summary>
@@ -25,9 +26,18 @@ public class DeleteSaleHandler(ISaleRepository saleRepository, IMapper mapper) :
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
+        var sale = await saleRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (sale == null)
+        {
+            throw new KeyNotFoundException($"Sale with ID {request.Id} not found.");
+        }
+
         bool isDeleted = await saleRepository.DeleteAsync(request.Id, cancellationToken);
         if (!isDeleted)
             throw new KeyNotFoundException($"Sale with ID {request.Id} not found.");
+
+        sale.Cancel();
+        await mediator.Publish(new SaleCancelledEvent(sale), cancellationToken);
 
         return new DeleteSaleResult(true);
     }
