@@ -37,10 +37,9 @@ public record CreateSaleCommand : IRequest<CreateSaleResult>
     }
 }
 
-public record CreateSaleItemCommand
-{
-    public string ProductId { get; init; } = string.Empty;
-    public string ProductName { get; init; } = string.Empty;
-    public int Quantity { get; init; }
-    public decimal UnitPrice { get; init; }
-}
+public record CreateSaleItemCommand(
+    Guid ProductId,
+    string ProductName,
+    int Quantity,
+    decimal UnitPrice
+);

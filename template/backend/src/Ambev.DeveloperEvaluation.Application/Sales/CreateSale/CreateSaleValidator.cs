@@ -18,14 +18,14 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
     /// </remarks>
     public CreateSaleCommandValidator()
     {
-        RuleFor(s => s.CustomerId).NotEmpty().MaximumLength(50);
+        RuleFor(s => s.CustomerId).NotEmpty();
         RuleFor(s => s.CustomerName).NotEmpty().MaximumLength(100);
-        RuleFor(s => s.BranchId).NotEmpty().MaximumLength(50);
+        RuleFor(s => s.BranchId).NotEmpty();
         RuleFor(s => s.BranchName).NotEmpty().MaximumLength(100);
         RuleFor(s => s.Items).NotEmpty();
         RuleForEach(s => s.Items).ChildRules(items =>
         {
-            items.RuleFor(i => i.ProductId).NotEmpty().MaximumLength(50);
+            items.RuleFor(i => i.ProductId).NotEmpty();
             items.RuleFor(i => i.Quantity).InclusiveBetween(1, 20);
             items.RuleFor(i => i.UnitPrice).GreaterThan(0);
         });
