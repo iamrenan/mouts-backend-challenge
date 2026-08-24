@@ -14,7 +14,7 @@ namespace Ambev.DeveloperEvaluation.WebApi;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         try
         {
@@ -57,6 +57,7 @@ public class Program
 
             if (app.Environment.IsDevelopment())
             {
+                await app.ApplyMigrationsAsync();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
