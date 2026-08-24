@@ -19,9 +19,9 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 /// </remarks>
 public record CreateSaleCommand : IRequest<CreateSaleResult>
 {
-    public string CustomerId { get; init; } = string.Empty;
+    public Guid CustomerId { get; init; }
     public string CustomerName { get; init; } = string.Empty;
-    public string BranchId { get; init; } = string.Empty;
+    public Guid BranchId { get; init; }
     public string BranchName { get; init; } = string.Empty;
     public List<CreateSaleItemCommand> Items { get; init; } = [];
 

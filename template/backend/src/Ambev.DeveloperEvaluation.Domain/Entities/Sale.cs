@@ -12,9 +12,9 @@ public class Sale : BaseEntity
 {
     public string SaleNumber { get; private set; } = string.Empty;
     public DateTime SaleDate { get; private set; }
-    public string CustomerId { get; private set; } = string.Empty;
+    public Guid CustomerId { get; private set; }
     public string CustomerName { get; private set; } = string.Empty;
-    public string BranchId { get; private set; } = string.Empty;
+    public Guid BranchId { get; private set; }
     public string BranchName { get; private set; } = string.Empty;
     public decimal TotalAmount { get; private set; }
     private readonly List<SaleItem> _items = new();

@@ -5,7 +5,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 public class SaleItem : BaseEntity
 {
     public Guid SaleId { get; private set; }
-    public string ProductId { get; private set; } = string.Empty;
+    public Guid ProductId { get; private set; }
     public string ProductName { get; private set; } = string.Empty;
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
@@ -13,7 +13,7 @@ public class SaleItem : BaseEntity
     public decimal Discount { get; private set; }
     public bool IsCancelled { get; private set; }
 
-    public SaleItem(string productId, string productName, int quantity, decimal unitPrice)
+    public SaleItem(Guid productId, string productName, int quantity, decimal unitPrice)
     {
         if (quantity > 20)
             throw new DomainException("Cannot sell more than 20 identical items.");
