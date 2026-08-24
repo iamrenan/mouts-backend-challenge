@@ -34,18 +34,24 @@ public class SaleItem : BaseEntity
         CalculateDiscount();
     }
 
-    internal void CalculateDiscount()
+    internal void CalculateDiscount(int? totalProductQuantity = null)
     {
-        var discountRate = Quantity switch
+        var effectiveQuantity = totalProductQuantity ?? Quantity;
+        var discountRate = effectiveQuantity switch
         {
             >= 10 and <= 20 => 0.20m,
             >= 4 and < 10 => 0.10m,
             _ => 0m
         };
 
-        Discount = Quantity * UnitPrice * discountRate;
-        Total = (Quantity * UnitPrice) - Discount;
+        Discount = Math.Round(Quantity * UnitPrice * discountRate, 2);
+        Total = Math.Round((Quantity * UnitPrice) - Discount, 2);
     }
 
-    internal void Cancel() => IsCancelled = true;
+    internal void Cancel()
+    {
+        IsCancelled = true;
+        Discount = 0m;
+        Total = 0m;
+    }
 }
