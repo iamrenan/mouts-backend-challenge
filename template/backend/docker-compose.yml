@@ -9,13 +9,13 @@ services:
       dockerfile: src/Ambev.DeveloperEvaluation.WebApi/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=${INTERNAL_PORT:-8080}
+      - ASPNETCORE_HTTPS_PORTS=${INTERNAL_HTTPS_PORT:-8081}
       - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=${DB_INTERNAL_PORT};Database=${POSTGRES_DB};User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TrustServerCertificate=True
       - ConnectionStrings__Redis=${REDIS_HOST:-ambev.developerevaluation.cache}:${REDIS_PORT:-6379},password=${REDIS_PASSWORD}
     ports:
-      - "8080"
-      - "8081"
+      - "${EXTERNAL_PORT:-8080}:${INTERNAL_PORT:-8080}"
+      - "${EXTERNAL_HTTPS_PORT:-8081}:${INTERNAL_HTTPS_PORT:-8081}"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
